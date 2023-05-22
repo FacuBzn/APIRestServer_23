@@ -55,12 +55,12 @@ const userUpdate = async (req, res=response) =>{ // PUT request to API server
 
 const userDelete = async (req, res=response) =>{ // DELETE request to API server
     
-    const id = req.params.id;
+    const {id} = req.params;
+    const query = { statusUser:false}
+
+    const userDeleted = await User.findByIdAndUpdate(id, query);
         
-    res.json({
-        msg:'DELETE request to API server',
-        id
-    });
+    res.json({ userDeleted});
 }
 
 module.exports = {
