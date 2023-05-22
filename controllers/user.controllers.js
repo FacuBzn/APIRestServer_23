@@ -34,11 +34,20 @@ const userCreate = async (req, res=response) =>{ // POST request to API server
 
 const userUpdate = async (req, res=response) =>{ // PUT request to API server
 
-    const id = req.params.id;
+    const {id} = req.params;
+    const {_id, password, google,... resto} = req.body //no necesito que se grabe
+
+    if (password) {
+        //encrypt password 
+        const salt = bcryptjs.genSaltSync();
+        resto.password = bcryptjs.hashSync(password, salt);
+    }
+
+    const userUpdated = await User.findByIdAndUpdate(id, resto);
 
     res.json({
         msg:'PUT request to API server',
-        id
+        userUPdate: resto     
     });
 }
 
