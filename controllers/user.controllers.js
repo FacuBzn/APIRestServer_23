@@ -6,11 +6,19 @@ const User = require('../model/user'); //crea instancias del modelo
 
 const userGet = async (req = request, res=response) =>{ // GET request to API server
 
-    const params = req.body;
+    const { limite=5, desde=0 } = req.query; 
+    const query = { statusUser:true}
+
+    const [total, users] = await Promise.all([
+        User.countDocuments(query),
+        User.find(query)
+        .skip(Number (desde))
+        .limit(Number (limite))
+    ]);
 
     res.json({
-        msg:'GET request to API server',
-        params: params
+        totalUsers: total,
+        users: users
     });
 }
 
@@ -26,10 +34,7 @@ const userCreate = async (req, res=response) =>{ // POST request to API server
 
     await user.save();
 
-    res.json({
-        msg:'POST request to API server',
-        user
-    });
+    res.json({ user });
 }
 
 const userUpdate = async (req, res=response) =>{ // PUT request to API server
@@ -45,10 +50,7 @@ const userUpdate = async (req, res=response) =>{ // PUT request to API server
 
     const userUpdated = await User.findByIdAndUpdate(id, resto);
 
-    res.json({
-        msg:'PUT request to API server',
-        userUPdate: resto     
-    });
+    res.json({ userUpdated: resto });
 }
 
 const userDelete = async (req, res=response) =>{ // DELETE request to API server
