@@ -60,7 +60,7 @@ const userDelete = async (req, res=response) =>{ // DELETE request to API server
 
     const userDeleted = await User.findByIdAndUpdate(id, query);
         
-    res.json({ userDeleted});
+    res.json({   userDeleted});
 }
 
 module.exports = {
