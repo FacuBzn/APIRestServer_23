@@ -19,13 +19,6 @@ const userCreate = async (req, res=response) =>{ // POST request to API server
     const { nameUser, email, password, role } = req.body  //nombres que yo quiero sacar y grabar solamente 
     const user = new User({nameUser, email, password, role});  //estos son los campos que deseo guardar en mongodb
 
-    //Check if the email exists 
-    const existEmail = await User.findOne({email});
-    if ( existEmail ){ // si el email ya existe (true) devuelvo un mensaje con que el email ya existe.
-        return res.status(400).json({
-            msg: `this email "${email}" already exists in the database`
-        });
-    }
     //encrypt password 
     const salt = bcryptjs.genSaltSync();
     user.password = bcryptjs.hashSync(password, salt);
