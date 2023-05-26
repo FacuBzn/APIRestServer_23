@@ -58,14 +58,20 @@ const userDelete = async (req, res=response) =>{ // DELETE request to API server
     const {id} = req.params;
     const query = { statusUser:false}
 
-    const userDeleted = await User.findByIdAndUpdate(id, query);
-        
-    res.json({   userDeleted});
+/*  const userDeleted = await User.findByIdAndUpdate(id, query);            
+    res.json({ userDeleted });  */
+    try {
+        const userDeleted = await User.findByIdAndUpdate(id, query);
+        res.json({ userDeleted });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ msg: 'An error occurred' });
+      }
 }
 
 module.exports = {
     userGet,
     userCreate,
-    userUpdate,
+    userUpdate, 
     userDelete,
 }

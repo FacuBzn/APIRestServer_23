@@ -2,6 +2,7 @@ const {Router} = require('express');
 const { check } = require('express-validator');
 
 const { validateFields } = require('../middlewares/validate_fields');
+const { validateJWT } = require('../middlewares/validate_jwt');
 const { isRoleValid , emailExist, userExistsById} = require('../helpers/db_validators');
 const { userGet , userCreate, userUpdate, userDelete} = require('../controllers/user.controllers');
 
@@ -10,23 +11,24 @@ const router = Router();
 router.get('/', userGet);
 
 router.post('/',[
-    check('nameUser', 'the nameUser is required').not().isEmpty(),
-    check('password', 'the password is required and must be more than 6 characters.').isLength({min:6}),
-    check('email', 'the email entered is not valid').isEmail(),
+    check('nameUser', 'The nameUser is required').not().isEmpty(),
+    check('password', 'The password is required and must be more than 6 characters.').isLength({min:6}),
+    check('email', 'The email entered is not valid').isEmail(),
     check('email').custom(emailExist),
     check('role').custom(isRoleValid),
     validateFields
 ], userCreate);
 
 router.put('/:id', [
-    check('id','it is not a valid id').isMongoId(),
+    check('id','It is not a valid id').isMongoId(),
     check('id').custom(userExistsById),
     check('role').custom(isRoleValid),
     validateFields
 ], userUpdate);
 
 router.delete('/:id',[
-    check('id','it is not a valid id').isMongoId(),
+    validateJWT,
+    check('id','It is not a valid id').isMongoId(),
     check('id').custom(userExistsById),
     validateFields
 ], userDelete);
