@@ -43,7 +43,19 @@ const login = async (req, res= response) => {
     catch (error) {
         console.log(error);
         return res.status(500).json({message: 'Invalid login, call the admin'});
-    }   
+    }      
 }
 
-module.exports ={login}
+const googleSignIn = async (req, res = response) => {
+    const {id_token} = req.body
+
+    res.json({
+        msg: 'Success Token',
+        id_token
+    })
+}
+
+module.exports ={
+    login,
+    googleSignIn
+}
