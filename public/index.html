@@ -1,16 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+  body {font-family: Arial, Helvetica, sans-serif;}
+
+  input[type=text], input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px ;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+
+  button:hover {
+    opacity: 0.8;
+  }
+  .lg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 150px;
+    margin: 30px;
+    padding: 100px;
+  }
+  .container {
+    padding: 16px;
+  }
+  </style>
 </head>
 <body>
-    <h1>Acceso Denegado</h1>
+  <center><h2 >Login</h2></center>    
 
-    <script>   
-        alert("Hello\nHow are you?");       
+        <div class="container">                      
+          <div class="lg">
+            <div id="g_id_onload"
+                data-client_id="497863506404-am6tanb9j0h6dadkhfq9hmeprdndfgm1.apps.googleusercontent.com"
+                data-auto_prompt="false"
+                data-callback="handleCredentialResponse">
+            </div>         
+            <div class="g_id_signin"
+                data-type="standard"
+                data-shape="pill"
+                data-theme="filled_black"
+                data-text="signin_with"
+                data-size="large"
+                data-locale="en-GB"
+                data-logo_alignment="left">
+            </div>
+          </div>
+        </div>
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>    
+    <script>
+        function handleCredentialResponse(response) {
+        //Google Token: id_Token
+        console.log('id_Token',response.credential);
+        }
     </script>
 </body>
 </html>
