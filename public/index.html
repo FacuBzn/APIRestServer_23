@@ -32,7 +32,6 @@
 </head>
 <body>
   <center><h2 >Login</h2></center>    
-
         <div class="container">                      
           <div class="lg">
             <div id="g_id_onload"
@@ -48,9 +47,11 @@
                 data-size="large"
                 data-locale="en-GB"
                 data-logo_alignment="left">
-            </div>
+            </div>               
           </div>
+          <button id="signout">Sign Out</button>
         </div>
+        
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>    
     <script>
@@ -71,10 +72,24 @@
           .then(resp => resp.json())
           .then(resp => {
             console.log(resp);
+            localStorage.setItem('email', resp.user.email);
           })
           .catch(console.warn);
+        }
+
+        const button = document.getElementById('signout')
+
+        button.onclick = () => {
+
+          google.accounts.id.revoke(localStorage.getItem('email'), done =>{
+            localStorage.clear();
+            location.reload();
+          });
 
         }
+
+
+
     </script>
 </body>
 </html>
