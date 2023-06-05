@@ -8,7 +8,7 @@ const { getAllCategories,
         deleteCategory 
 } = require('../controllers/categories.controllers');
 
-const { validateJWT, validateFields } = require('../middlewares/index');
+const { validateJWT, validateFields ,isAdminRole} = require('../middlewares/index');
 
 const { categoryExistsById } = require('../helpers/db_validators');
 
@@ -32,10 +32,21 @@ router.post('/',[
 ], createCategory ); 
 
 //update a category with a valid token - private
-router.put('/:id',updateCategory ); 
+router.put('/:id',[ 
+    validateJWT,
+    check('nameCategory', 'The name of Category is required').not().isEmpty(),
+    check('id').custom(categoryExistsById),
+    validateFields
+], updateCategory ); 
 
 //delete a category - only if you are an administrator
-router.delete('/:id',deleteCategory ); 
+router.delete('/:id',[
+    validateJWT,
+    isAdminRole,
+    check('id','It is not a valid id').isMongoId(),
+    check('id').custom(categoryExistsById),
+    validateFields
+], deleteCategory ); 
 
 module.exports = router;
 

@@ -69,11 +69,12 @@ const getCategoryById = async (req, res = response) => {
 
 const updateCategory = async (req, res = response) => {
     const {id} = req.params;
-    const {_id, ...resto} = req.body;
+    const {_id, estado, user, ...resto} = req.body;
 
     resto.nameCategory = resto.nameCategory.toUpperCase(); // Convertir a mayúsculas
+    resto.user = req.user._id;
 
-    const categoryUpd = await Categories.findByIdAndUpdate(id, resto);
+    const categoryUpd = await Categories.findByIdAndUpdate(id, resto, {new: true}); //el new es para que mande el nuevo archivo
     res.status(200).json({ categoryUpd: resto });
  
 }
@@ -84,7 +85,7 @@ const deleteCategory = async (req, res = response) => {
     const query = { statusCategory: false};
 
     try {
-        const categoryDlt = await Categories.findByIdAndUpdate(id, query);
+        const categoryDlt = await Categories.findByIdAndUpdate(id, query , {new: true}); //el new es para que mande el nue
         res.status(200).json({ categoryDlt });
     } catch (error) {
         console.log(error);
