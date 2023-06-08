@@ -14,6 +14,13 @@ const { categoryExistsById } = require('../helpers/db_validators');
 
 const router = Router();
 
+//create category - anyone with a valid token
+router.post('/',[
+    validateJWT,
+    check('nameCategory', 'The name of Category is required').not().isEmpty(),
+    validateFields
+], createCategory ); 
+
 // get all categories - public
 router.get('/', getAllCategories); 
 
@@ -23,13 +30,6 @@ router.get('/:id',[
     check('id').custom(categoryExistsById),
     validateFields
 ], getCategoryById ); 
-
-//create category - anyone with a valid token
-router.post('/',[
-    validateJWT,
-    check('nameCategory', 'The name of Category is required').not().isEmpty(),
-    validateFields
-], createCategory ); 
 
 //update a category with a valid token - private
 router.put('/:id',[ 

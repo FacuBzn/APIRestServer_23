@@ -1,5 +1,4 @@
 const {response, request} = require('express');
-const bcryptjs = require('bcryptjs');
 
 const Categories = require('../model/category');
 
