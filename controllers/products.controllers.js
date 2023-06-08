@@ -2,11 +2,12 @@ const {response, request} = require('express');
 
 const Product = require('../model/product');
 
-const createProduct = async (req, res = response) => {
+const createProduct = async (req = request, res = response) => {
 
     try {
         const {statusProduct, user, ...body} = req.body; 
         const nameProduct = req.body.nameProduct.toUpperCase();
+            
         const productDB = await Product.findOne({ nameProduct })
         .populate({
             path:'user',
@@ -19,16 +20,17 @@ const createProduct = async (req, res = response) => {
 
         if (productDB) {
             return res.status(400).json({
-              msg: `The Product name ${productDB.nameProduct} already exists`
+              msg: `The Product name ${nameProduct} already exists`
             });
         }          
         // data that I want to save 
         const data = {
             ...body,
-            name: body.nameProduct.toUpperCase(), 
+            nameProduct: nameProduct,
             user: req.user._id,
         }    
-        const product = new Product(data);    
+        const product = new Product(data); 
+
         //save to database
         await product.save();    
         res.status(201).json({ product: product });
