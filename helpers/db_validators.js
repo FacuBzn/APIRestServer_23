@@ -42,6 +42,17 @@ const productExistsById = async (id) => {
         throw new Error(`The id: ${id} does not exist`)
     }
 }  
+// validation for colections available
+const colectionAvailable = async (coleccion = '', colecciones = []) => {
+
+    const inc = colecciones.includes(coleccion);
+    if (!inc) {
+        throw new Error(`${ coleccion } isn't an allowed collections, ${colecciones}`)
+    }
+    return true;
+}  
+
+
 
 module.exports = { 
     isRoleValid, 
@@ -49,4 +60,5 @@ module.exports = {
     userExistsById, 
     categoryExistsById, 
     productExistsById,
+    colectionAvailable,
 };

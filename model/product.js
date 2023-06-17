@@ -19,6 +19,9 @@ const ProductSchema =Schema({
         type: Boolean, 
         default: false
     },
+    img:{ 
+        type: String,         
+    },
     statusProduct:{
         type: Boolean,
         default: true, 

@@ -1,5 +1,8 @@
 const path = require('path');
-const {response} = require('express');
+const { response } = require('express');
+const { uploadedFile } = require('../helpers');
+
+const { User, Product} = require('../model');
 
 
 const uploadFiles  = async (req, res= response) => {
@@ -9,33 +12,48 @@ const uploadFiles  = async (req, res= response) => {
       res.status(400).json({msg:'No files were uploaded.'});
       return;
     }
-  
-    const {archivo} = req.files;
-    
-    const cutName = archivo.name.split('.');
-    const extentOfFile = cutName[cutName.length - 1];
+    try {
+      /* const fullPath = await uploadedFile( req.files, ['txt','md', 'docx'], 'texts')     */
+      const fullPath = await uploadedFile( req.files, undefined, 'imgs')    
+      res.json({name: fullPath});
 
-    //validate to extent of file
-    const extValid = ['png', 'jpg', 'jpeg', 'gif'];
-    if ( !extValid.includes(extentOfFile) ){
-      return res.status(400).json({
-        message:`the following extension ${extentOfFile} is not valid, the following are allowed ${extValid}`
-      });
+    } catch (msg) {
+      res.status(400).json({msg});
     }
-    
-    
-    res.json({ msg:'extentOfFile: ' + extentOfFile });
 
-/*     const uploadPath = path.join( __dirname, '../uploads/', archivo.name) ;
-  
-    archivo.mv(uploadPath, (err) => {
-      if (err) {
-        return res.status(500).json({err});
+};
+
+const updateImage = async (req, res = response) => {
+
+  const { id, coleccion } = req.params;
+  let modelo;
+
+  switch ( coleccion ) {
+    case 'users': 
+      modelo = await User.findById(id);
+      if ( !modelo ){
+        return res.status(400).json({ 
+          msg:` There isn't user with the id ${id}`
+        });
       }
+    break;
+
+    case 'products':  
+      modelo = await Product.findById(id);
+      if ( !modelo ){
+        return res.status(400).json({ 
+          msg:` There isn't product with the id ${id}`
+        });
+      }
+    break;
   
-      res.json({ msg:'File uploaded to ' + uploadPath });
-    }); */
+    default:
+      return res.status(500).json({ msg:'There is no validation for this Case' })
+  }
+  const nameFile = await uploadedFile( req.files, undefined, coleccion);
+  modelo.img = nameFile;
+  await modelo.save();
+  res.json(modelo);
+};
 
-}
-
-module.exports = { uploadFiles }
+module.exports = { uploadFiles , updateImage };
